@@ -1,0 +1,5 @@
+.vscode/
+spider/data/
+
+*.pyc
+*.out
