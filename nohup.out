@@ -1,0 +1,19 @@
+Traceback (most recent call last):
+  File "/root/repos/virus-report/spider/scheduler.py", line 47, in <module>
+    sleep(sleepTime)
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "/root/repos/virus-report/spider/scheduler.py", line 39, in <module>
+    sumList, timeList = loadHistory()
+  File "/root/repos/virus-report/spider/scheduler.py", line 26, in loadHistory
+    if os.path.exists(sumPath) and os.path.exists(timePath):
+NameError: name 'os' is not defined
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/root/repos/virus-report/spider/scheduler.py", line 54, in <module>
+    saveData()
+  File "/root/repos/virus-report/spider/scheduler.py", line 12, in saveData
+    json.dump(sumList,w,ensure_ascii=False)
+NameError: name 'sumList' is not defined

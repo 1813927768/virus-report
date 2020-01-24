@@ -59,5 +59,5 @@ class HtmlDownloader(object):
 if __name__=="__main__":
     hd =  HtmlDownloader()
     html = hd.download('https://3g.dxy.cn/newh5/view/pneumonia')
-    with open("./spider/data/page.txt","w",errors='ignore') as w:
+    with open("./spider/data/page.html","w",errors='ignore') as w:
         w.write(html)

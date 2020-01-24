@@ -21,21 +21,25 @@ class HtmlParser(object):
         soup = BeautifulSoup(open(r'./spider/data/page.html'),"lxml")
         rawSum = soup.find(id="getStatisticsService").text
         res = re.search('(?<=\"countRemark\":).*?,',rawSum).group(0)
-        r = re.search('\d+',res)
+        r = re.search('(?<=治愈\s)\d+',res)
         print(r)
           
     # 查询当前时刻疫情
     def _get_current_status(self,soup):
         rawSummary = soup.find(id="getStatisticsService").text
         res = re.search('(?<=\"countRemark\":).*?,',rawSummary).group(0)
-        nums = re.findall('\d+',res)
-        if len(nums) != 4:
-            raise Exception("Parse page fail!")
+        cure = re.search('(?<=治愈\s)\d+',res).group(0)
+        death = re.search('(?<=死亡\s)\d+',res).group(0)
+        suspected = re.search('(?<=疑似\s)\d+',res).group(0)
+        diagnosis = re.search('(?<=确诊\s)\d+',res).group(0)
+        # nums = re.findall('\d+',res)
+        # if len(nums) != 4:
+        #     raise Exception("Parse page fail!")
         summary = {}
-        summary['确诊'] = int(nums[0])
-        summary['疑似'] = int(nums[1])
-        summary['治愈'] = int(nums[2])
-        summary['死亡'] = int(nums[3])
+        summary['确诊'] = int(diagnosis)
+        summary['疑似'] = int(suspected)
+        summary['治愈'] = int(cure)
+        summary['死亡'] = int(death)
         return summary
     
     def _get_history_status(self,soup):
