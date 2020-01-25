@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plot
+from utils import loadHistory
 
 colorStyle = {
     '确诊': 'red',
@@ -31,20 +32,18 @@ ch2en = {
 def getLast(list):
     return list[len(list)-1]
 
-def makePlot(x,y):
+def makePlot(x,y,ignore=['治愈','死亡','疑似']):
     plot.ylabel('people')
     plot.xlabel("time")
     for key in y[0].keys():
+        if key in ignore:
+            continue
         plot.plot(x, list(map(lambda x:x[key],y)), color=colorStyle[key], marker=markerStyle[key], linestyle=lineStyle[key],label=ch2en[key])
     plot.title('2019-nConv Report')
-    plot.legend()
+    # plot.legend(shadow=True,loc="upper left")
     plot.savefig("./spider/data/2019-nConv_report_%s.jpg"%(getLast(x)))
 
 if __name__ == '__main__':
-    years = [2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017]
-    nums = [256, 289, 302, 356, 389, 400, 402, 436]
-    gdps = []
-    for i in range(len(nums)):
-        gdps.append({'确诊': nums[i], '死亡': nums[i]-100})
-    makePlot(years,gdps)
+    sumList,timeList = loadHistory()
+    makePlot(timeList,sumList)
     
