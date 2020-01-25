@@ -1,3 +1,5 @@
+import os,json
+
 sumPath = "./spider/data/sum.json"
 timePath = "./spider/data/time.json"
 
@@ -11,8 +13,13 @@ def loadHistory():
             timeList = json.load(w)   
     return sumList,timeList
 
-def saveData():
+def saveData(sumList,timeList):
     with open(sumPath,"w",errors='ignore',encoding='utf-8') as w:
         json.dump(sumList,w,ensure_ascii=False)
     with open(timePath,"w",errors='ignore') as w:
         json.dump(timeList,w)
+
+def test():
+    testList = {'吃穿': 1}
+    with open("./spider/data/sum.json","w",errors='ignore',encoding='utf-8') as w:
+        json.dump(testList,w,ensure_ascii=False)
