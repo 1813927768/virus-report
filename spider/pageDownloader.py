@@ -4,11 +4,7 @@ import requests
 import random
 import os
 
-class HtmlDownloader(object):
-
-    def __init__(self):
-        self.count = 0
-        
+class HtmlDownloader(object):      
  
     def download(self,url):
         if url is None:
@@ -46,15 +42,12 @@ class HtmlDownloader(object):
             'User-Agent':user_agent,
         }
         r = requests.get(url,headers=header,timeout=20)
-        self.count = self.count+1
         r.raise_for_status()
         r.encoding='utf-8'
         if r.text is None:
             raise Exception("Download page fail!")
         return r.text
     
-
-
 
 if __name__=="__main__":
     hd =  HtmlDownloader()

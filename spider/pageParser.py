@@ -3,38 +3,86 @@
 from bs4 import BeautifulSoup
 import lxml
 import re
-import time
+import json
 
-def getLocalTime():
-    return time.strftime('%Y-%m-%d %Hh',time.localtime(time.time()))
+def findElement(array,func):
+    for i in array:
+        if func(i):
+            return i
+    return None
 
-class HtmlParser(object):
+def findElementByProvinceName(array,name):
+    def compareProvinceName(item):
+        if item["provinceName"] == name or item["provinceShortName"] == name:
+            return True
+        return False
+    return findElement(array,compareProvinceName)
+
+def findElementByCityName(array,name):
+    def compareCityName(item):
+        if item["cityName"] == name:
+            return True
+        return False
+    return findElement(array,compareCityName)
+
+class HtmlParser(object):       
+
+    def __init__(self,html):
+        if not html is None:
+            self.soup = BeautifulSoup(html,'lxml')
+             
+    def getSummary(self):             
+        currentSum = self._get_current_status()
+        return currentSum
     
-    def parser(self,html):
-        if  html is None:
-            return
-        soup = BeautifulSoup(html,'lxml')
-        currentSum = self._get_current_status(soup)
-        return getLocalTime(),  currentSum
+    def getProvinceSummary(self,provinceName):
+         provinceData = self._get_province_stats(provinceName)
+         provinceSummary = {
+             "确诊": provinceData['confirmedCount'],
+             "疑似": provinceData['suspectedCount'],
+             "治愈": provinceData['curedCount'],
+             "疑似": provinceData['deadCount']
+            }
+         return provinceSummary
+    
+    def getCitySummary(self,provinceName,cityName):
+        provinceData = self._get_province_stats(provinceName)
+        cityData = self._get_city_stats(provinceData,cityName)
+        citySummary = {
+            "确诊": cityData['confirmedCount'],
+            "疑似": cityData['suspectedCount'],
+            "治愈": cityData['curedCount'],
+            "疑似": cityData['deadCount']
+        }
+        return citySummary
     
     def test(self):
-        soup = BeautifulSoup(open(r'./spider/data/page.html'),"lxml")
-        rawSum = soup.find(id="getStatisticsService").text
-        res = re.search('(?<=\"countRemark\":).*?,',rawSum).group(0)
-        r = re.search('(?<=治愈\s)\d+',res)
-        print(r)
-          
-    # 查询当前时刻疫情
-    def _get_current_status(self,soup):
-        rawSummary = soup.find(id="getStatisticsService").text
+        self.soup = BeautifulSoup(open(r'./spider/data/page.html'),"lxml")
+        province = self._get_province_stats("河南")
+        city = self._get_city_stats(province,"信阳")
+        print(city)
+
+    # 查询某省数据
+    def _get_province_stats(self,name):
+        raw = self.soup.find(id="getAreaStat").text
+        areaStatStr = re.search('(?<=getAreaStat\s=).*(?=}catch)',raw).group(0)
+        areaStatArray = json.loads(areaStatStr)
+        provinceData = findElementByProvinceName(areaStatArray,name)
+        return provinceData
+    
+    # 查询城市数据
+    def _get_city_stats(self,provinceData,cityName):
+        return findElementByCityName(provinceData["cities"],cityName)
+   
+    # 查询当前时刻全国数据
+    def _get_current_status(self):
+        # 全国数据
+        rawSummary = self.soup.find(id="getStatisticsService").text
         res = re.search('(?<=\"countRemark\":).*?,',rawSummary).group(0)
         cure = re.search('(?<=治愈\s)\d+',res).group(0)
         death = re.search('(?<=死亡\s)\d+',res).group(0)
         suspected = re.search('(?<=疑似\s)\d+',res).group(0)
         diagnosis = re.search('(?<=确诊\s)\d+',res).group(0)
-        # nums = re.findall('\d+',res)
-        # if len(nums) != 4:
-        #     raise Exception("Parse page fail!")
         summary = {}
         summary['确诊'] = int(diagnosis)
         summary['疑似'] = int(suspected)
@@ -42,13 +90,10 @@ class HtmlParser(object):
         summary['死亡'] = int(death)
         return summary
     
-    def _get_history_status(self,soup):
+    def _get_history_status(self):
         pass
 
 
 if __name__=="__main__":
     hp =  HtmlParser()
     hp.test()
-    # with open("test.txt","w",errors='ignore') as w:
-    #     w.write(html)
-    # hp.parser(url,html)
