@@ -43,7 +43,7 @@ def makePlot(x,y,title="national",ignore=['治愈','死亡','疑似']):
         plot.plot(x, list(map(lambda x:x[key],y)), color=colorStyle[key], marker=markerStyle[key], linestyle=lineStyle[key],label=ch2en[key])
     plot.title('2019-nConv Report')
     # plot.legend(shadow=True,loc="upper left")
-    plot.savefig("./spider/data/2019-nConv_report_%s_%s.jpg"%(title,getLast(x)))
+    plot.savefig("./spider/image/2019-nConv_report_%s_%s.jpg"%(title,getLast(x)))
 
 if __name__ == '__main__':
     sumList,timeList = loadHistory()

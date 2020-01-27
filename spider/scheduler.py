@@ -1,7 +1,7 @@
 from pageDownloader import HtmlDownloader
 from pageParser import HtmlParser
 from plot import makePlot
-from time import sleep
+import time
 from utils import saveData,loadHistory,getLocalTime
 
 currentTick = 0
@@ -9,6 +9,10 @@ interval = 1*60*60
 nextScheduleTime = 0*60*60
 dingxiangyuanURL = 'https://3g.dxy.cn/newh5/view/pneumonia'
 
+def getCurrentTick():
+    startTime = time.mktime(time.strptime("2020-01-26 23", "%Y-%m-%d %H"))
+    currentTime = time.time()
+    return (currentTime-startTime)//interval
 
 def schedulePlot(parser, name="nation",level="nation",interval=3):
     """schedule a plot of any scope for any area(city or province)
@@ -19,7 +23,7 @@ def schedulePlot(parser, name="nation",level="nation",interval=3):
     :param interval: set by hour
     """
 
-    if True or currentTick % interval == 0:
+    if currentTick % interval == 0:
 
         fileName = "%s_%s"%(level,name)
         sumPath = "./spider/data/sum_%s.json"%(fileName)
@@ -46,7 +50,8 @@ def schedulePlot(parser, name="nation",level="nation",interval=3):
     
 if __name__=="__main__":
   
-    sleep(nextScheduleTime)
+    currentTick = getCurrentTick()
+    time.sleep(nextScheduleTime)
     while True:
         # download page
         hd =  HtmlDownloader()
@@ -60,5 +65,5 @@ if __name__=="__main__":
         schedulePlot(hp,"湖北-武汉","city",12)
         # update every hour
         currentTick += 1
-        sleep(interval)
+        time.sleep(interval)
 
