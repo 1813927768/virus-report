@@ -10,7 +10,7 @@ nextScheduleTime = 0*60*60
 dingxiangyuanURL = 'https://3g.dxy.cn/newh5/view/pneumonia'
 
 def getCurrentTick():
-    startTime = time.mktime(time.strptime("2020-01-26 23", "%Y-%m-%d %H"))
+    startTime = time.mktime(time.strptime("2020-01-28 13", "%Y-%m-%d %H"))
     currentTime = time.time()
     return (currentTime-startTime)//interval
 
@@ -60,8 +60,8 @@ if __name__=="__main__":
         hp = HtmlParser(html)
         schedulePlot(hp)
         schedulePlot(hp,"湖北","province",6)
-        schedulePlot(hp,"河南","province",6)
-        schedulePlot(hp,"河南-信阳","city",12)
+        schedulePlot(hp,"河南","province",8)
+        schedulePlot(hp,"河南-信阳","city",24)
         schedulePlot(hp,"湖北-武汉","city",12)
         # update every hour
         currentTick += 1
