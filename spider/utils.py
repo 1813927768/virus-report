@@ -17,9 +17,24 @@ def saveData(sumList,sumPath,timeList,timePath):
         json.dump(timeList,w)
 
 def getLocalTime():
-    return time.strftime('%m-%d %Hh',time.localtime(time.time()))
+    return time.strftime('%m-%d %Hh',time.localtime(time.time()))    
+
+def backup():
+    os.system('/bin/cp -f ./spider/data/*.json ./spider/data/backup/')
+    # update images for html
+    os.system('rm -f ./web/image/*')
+    os.system('/bin/cp -f image/*.jpg web/image/')
+    # update config.js
+    with open("./config.json","r",errors='ignore',encoding='utf-8') as w:
+        configJson = json.load(w)
+        configStr = json.dumps(configJson,ensure_ascii=False)
+    with open("./web/config.js","w",errors='ignore',encoding='utf-8') as w:
+        w.write("var config = %s"%(configStr))
 
 def test():
     testList = {'吃穿': 1}
     with open("./spider/data/sum.json","w",errors='ignore',encoding='utf-8') as w:
         json.dump(testList,w,ensure_ascii=False)
+
+if __name__ == '__main__':
+    backup()

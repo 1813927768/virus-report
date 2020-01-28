@@ -1,20 +1,45 @@
 from pageDownloader import HtmlDownloader
 from pageParser import HtmlParser
 from plot import makePlot
-import time
-from utils import saveData,loadHistory,getLocalTime
+import time, json
+from utils import saveData,loadHistory,getLocalTime,backup
 
 currentTick = 0
-interval = 1*60*60
+config = {}
+sleepInterval = 3600
 nextScheduleTime = 0*60*60
 dingxiangyuanURL = 'https://3g.dxy.cn/newh5/view/pneumonia'
 
 def getCurrentTick():
-    startTime = time.mktime(time.strptime("2020-01-28 13", "%Y-%m-%d %H"))
+    startTime = time.mktime(time.strptime(config['startTime'], "%Y-%m-%d %Hh"))
     currentTime = time.time()
-    return (currentTime-startTime)//interval
+    return int((currentTime-startTime)//3600)
 
-def schedulePlot(parser, name="nation",level="nation",interval=3):
+def loadConfig():
+    with open("./config.json","r",errors='ignore',encoding='utf-8') as w:
+        global config
+        config = json.load(w)  
+
+def updateConfig(name,level):
+    # change the 'lastUpdate' property of the specific item in monitorList
+    for item in config['monitorList']:
+        if item['level'] == level and item['name'] == name:
+            item['lastUpdate'] = getLocalTime()
+            break
+
+def checkConfig(name,level):
+    # check if this item in monitorList has been updated
+    for item in config['monitorList']:
+        if item['level'] == level and item['name'] == name and item['lastUpdate'] == getLocalTime():
+            return True
+    return False
+
+
+def saveConfig():
+    with open("./config.json","w",errors='ignore',encoding='utf-8') as w:
+        json.dump(config, w, ensure_ascii=False)
+
+def schedulePlot(parser, name="全国",level="nation",interval=3):
     """schedule a plot of any scope for any area(city or province)
 
     :param parser: a HtmlParser Object
@@ -23,7 +48,7 @@ def schedulePlot(parser, name="nation",level="nation",interval=3):
     :param interval: set by hour
     """
 
-    if currentTick % interval == 0:
+    if currentTick % interval == 0 and not checkConfig(name,level):
 
         fileName = "%s_%s"%(level,name)
         sumPath = "./spider/data/sum_%s.json"%(fileName)
@@ -47,9 +72,12 @@ def schedulePlot(parser, name="nation",level="nation",interval=3):
         makePlot(timeList,sumList,fileName)
         saveData(sumList,sumPath,timeList,timePath)
 
-    
+        updateConfig(name,level)
+
+
 if __name__=="__main__":
   
+    loadConfig()
     currentTick = getCurrentTick()
     time.sleep(nextScheduleTime)
     while True:
@@ -58,12 +86,14 @@ if __name__=="__main__":
         html = hd.download(dingxiangyuanURL)      
         # parse page     
         hp = HtmlParser(html)
-        schedulePlot(hp)
-        schedulePlot(hp,"湖北","province",6)
-        schedulePlot(hp,"河南","province",8)
-        schedulePlot(hp,"河南-信阳","city",24)
-        schedulePlot(hp,"湖北-武汉","city",12)
+        for item in config['monitorList']:
+            name,level,interval,_ = item.values()
+            schedulePlot(hp,name,level,interval)
+        # update config
+        config['currentTime'] = getLocalTime()
+        saveConfig()
+        backup()
         # update every hour
         currentTick += 1
-        time.sleep(interval)
+        time.sleep(sleepInterval)
 

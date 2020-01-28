@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plot
 import matplotlib.ticker as ticker
 from utils import loadHistory
+import os
 
 colorStyle = {
     '确诊': 'red',
@@ -29,9 +30,6 @@ ch2en = {
     '治愈': 'Cure',
     '疑似': 'Suspected'
 }
-
-def getLast(list):
-    return list[len(list)-1]
 
 # 防止x轴label过于密集（label最大数目7）
 def adjustXAxies(xArray):
@@ -64,8 +62,14 @@ def makePlot(x,y,title="national",ignore=['治愈','死亡','疑似']):
     # plot.xticks(range(1,len(x)+1),)
     plot.title('2019-nConv Report')
     # plot.legend(shadow=True,loc="upper left")
-    plot.savefig("./spider/image/2019-nConv_report_%s_%s.jpg"%(title,getLast(x)))
+    plot.savefig("./image/2019-nConv_report_%s_%s.jpg"%(title,x[-1]))
     plot.close('all')
+    if len(x) > 2:
+        try:
+            os.remove("./image/2019-nConv_report_%s_%s.jpg"%(title,x[-2]))
+        except:
+            print("remove error")
+    
 
 if __name__ == '__main__':
     sumPath = "./spider/data/sum_nation_nation.json"

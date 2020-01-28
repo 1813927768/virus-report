@@ -1,0 +1,22 @@
+{
+  "name": "virus-report",
+  "version": "1.0.0",
+  "description": "This repo is made for real-time tracking of virus 2019-nCoV.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/1813927768/virus-report.git"
+  },
+  "author": "1813927768",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/1813927768/virus-report/issues"
+  },
+  "homepage": "https://github.com/1813927768/virus-report#readme",
+  "dependencies": {
+    "http-server": "^0.12.1"
+  }
+}

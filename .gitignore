@@ -1,6 +1,10 @@
 .vscode/
-spider/data/
+spider/data/*.json
 spider/image/
 
 *.pyc
 *.out
+
+node_modules/
+backup/
+image/*.jpg

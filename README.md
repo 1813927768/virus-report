@@ -1,5 +1,27 @@
 This repo is made for real-time tracking of virus 2019-nCoV.
 
+Show the report on a [web page](http://47.100.88.239:8080/).
+
+![image](http://47.100.88.239:8080/image/2019-nConv_report_province_%E6%B2%B3%E5%8D%97_01-28%2021h.jpg)
+
 ## StartUp
 
-The entrance of this program is in `scheduler.py`. You can schedule your plot for any region at any interval by calling `schedulePlot()`.
+1. Edit the `config.json` file to make your own setting.
+2. `nohup python3 spider/scheduler.py`
+3. `nohup http-server ./web`
+
+
+> Requirements: You need some preparations for this program.
+>
+> 1. [`http-server`](https://blog.csdn.net/qq_37928350/article/details/81166873) in Node
+> 2. some python requirements for spider
+
+## Code 
+
+### ./spider
+
+The entrance of spider program is in `scheduler.py`. You can schedule your plot for any region at any interval by calling `schedulePlot()`.
+
+### ./web
+
+We use `http-server` in Node to show the output image in `index.html`.
