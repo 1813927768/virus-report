@@ -63,7 +63,6 @@ class HtmlParser(object):
         print(city)
         print(self._get_current_status())
         
-
     # 查询某省数据
     def _get_province_stats(self,name):
         raw = self.soup.find(id="getAreaStat").text
@@ -79,13 +78,13 @@ class HtmlParser(object):
     # 查询当前时刻全国数据
     def _get_current_status(self):
         # 全国数据
-        spanArray = self.soup.find("span",class_="content___2hIPS").find_all("span",style=False)
+        spanArray = self.soup.find("ul",class_="count___3GCdh").find_all("strong")
         if len(spanArray) != 4:
             raise Exception("parse Error")
-        cure = re.search('(?<=治愈\s)\d+',spanArray[3].text).group(0)
-        death = re.search('(?<=死亡\s)\d+',spanArray[2].text).group(0)
-        suspected = re.search('(?<=疑似\s)\d+',spanArray[1].text).group(0)
-        diagnosis = re.search('(?<=确诊\s)\d+',spanArray[0].text).group(0)
+        cure = spanArray[3].text
+        death = spanArray[2].text
+        suspected = spanArray[1].text
+        diagnosis = spanArray[0].text
         summary = {}
         summary['确诊'] = int(diagnosis)
         summary['疑似'] = int(suspected)
