@@ -4,6 +4,7 @@ spider/image/
 
 *.pyc
 *.out
+*.log
 
 node_modules/
 backup/
