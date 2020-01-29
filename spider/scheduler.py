@@ -37,6 +37,7 @@ def checkConfig(name,level):
 
 
 def saveConfig():
+    config['currentTime'] = getLocalTime()
     with open("./config.json","w",errors='ignore',encoding='utf-8') as w:
         json.dump(config, w, ensure_ascii=False)
 
@@ -92,12 +93,13 @@ if __name__=="__main__":
             # if dxy parser fail, switch to tx parser
             print('丁香园 page parse fail')
             hp = TxParser()
+        # make plots according to config.json settings
         for item in config['monitorList']:
             name,level,interval,_ = item.values()
             schedulePlot(hp,name,level,interval)
-        # update config
-        config['currentTime'] = getLocalTime()
+        # update config.json
         saveConfig()
+        # update web static contents
         backup()
         # update every hour
         currentTick += 1

@@ -2,7 +2,7 @@ This repo is made for real-time tracking of virus 2019-nCoV.
 
 Show the report on a [web page](http://47.100.88.239:8080/).
 
-![image](http://47.100.88.239:8080/image/2019-nConv_report_province_%E6%B2%B3%E5%8D%97_01-28%2021h.jpg)
+![image](https://github.com/1813927768/virus-report/blob/master/web/image/2019-nConv_report_national_01-28%2013h.jpg)
 
 ## StartUp
 
@@ -11,7 +11,7 @@ Show the report on a [web page](http://47.100.88.239:8080/).
 3. `nohup http-server ./web`
 
 
-> Requirements: You need some preparations for this program.
+> Requirements: Need some preparations for this program.
 >
 > 1. [`http-server`](https://blog.csdn.net/qq_37928350/article/details/81166873) in Node
 > 2. some python requirements for spider

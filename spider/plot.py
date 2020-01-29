@@ -1,5 +1,4 @@
 import matplotlib.pyplot as plot
-import matplotlib.ticker as ticker
 from utils import loadHistory
 import os
 
