@@ -1,6 +1,7 @@
 #coding:utf-8
 
 from bs4 import BeautifulSoup
+from abc import abstractmethod
 import lxml
 import re
 import json
@@ -25,7 +26,21 @@ def findElementByCityName(array,name):
         return False
     return findElement(array,compareCityName)
 
-class HtmlParser(object):       
+class HtmlParser(object):
+
+    @abstractmethod
+    def getSummary(self):
+        pass
+
+    @abstractmethod
+    def getCitySummary(self,provinceName,cityName):
+        pass
+
+    @abstractmethod
+    def getProvinceSummary(self,provinceName):
+        pass
+
+class DxyParser(HtmlParser):       
 
     def __init__(self,html):
         if not html is None:
@@ -41,7 +56,7 @@ class HtmlParser(object):
              "确诊": provinceData['confirmedCount'],
              "疑似": provinceData['suspectedCount'],
              "治愈": provinceData['curedCount'],
-             "疑似": provinceData['deadCount']
+             "死亡": provinceData['deadCount']
             }
          return provinceSummary
     
@@ -52,7 +67,7 @@ class HtmlParser(object):
             "确诊": cityData['confirmedCount'],
             "疑似": cityData['suspectedCount'],
             "治愈": cityData['curedCount'],
-            "疑似": cityData['deadCount']
+            "死亡": cityData['deadCount']
         }
         return citySummary
     
@@ -95,5 +110,7 @@ class HtmlParser(object):
 
 
 if __name__=="__main__":
-    hp =  HtmlParser(None)
-    hp.test()
+    parser = DxyParser(open(r'./spider/data/page.html'))
+    print(parser.getSummary())
+    print(parser.getCitySummary("河南","信阳"))
+    print(parser.getProvinceSummary('湖北'))

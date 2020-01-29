@@ -1,5 +1,6 @@
 from pageDownloader import HtmlDownloader
-from pageParser import HtmlParser
+from pageParser import HtmlParser, DxyParser
+from txPageParser import TxParser
 from plot import makePlot
 import time, json
 from utils import saveData,loadHistory,getLocalTime,backup
@@ -84,8 +85,13 @@ if __name__=="__main__":
         # download page
         hd =  HtmlDownloader()
         html = hd.download(dingxiangyuanURL)      
-        # parse page     
-        hp = HtmlParser(html)
+        # parse page
+        try:     
+            hp = DxyParser(html)
+        except:
+            # if dxy parser fail, switch to tx parser
+            print('丁香园 page parse fail')
+            hp = TxParser()
         for item in config['monitorList']:
             name,level,interval,_ = item.values()
             schedulePlot(hp,name,level,interval)
