@@ -28,7 +28,7 @@
         dom = document.createElement("div")
         dom.setAttribute("id","panel")
         img = document.createElement("img")
-        imgSrc = `image/2019-nConv_report_${element.level}_${element.name}_${element.lastUpdate}.jpg`
+        imgSrc = `image/2019-nConv_report_${element.level}_${element.name}_${element.interval !== 24 ? element.lastUpdate : element.lastUpdate.split(" ")[0]}.jpg`
         img.setAttribute("src",imgSrc)
         text = document.createElement("p")
         text.innerHTML = `${element.name}疫情监控 （每${element.interval}小时更新一次，最后更新于${element.lastUpdate}）`

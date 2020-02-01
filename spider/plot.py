@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plot
-from utils import loadHistory
+# from utils import loadHistory
 import os
 
 colorStyle = {
@@ -32,7 +32,7 @@ ch2en = {
 
 # 防止x轴label过于密集（label最大数目7）
 def adjustXAxies(xArray):
-    maxLabelNum = 7
+    maxLabelNum = 6
     
     def replaceInterval(xArray,interval):
         # 防止plot函数自动合并相同的x值（""）
@@ -43,7 +43,7 @@ def adjustXAxies(xArray):
                 resArray[loc] = xArray[loc]
         return resArray
             
-    if len(xArray) <= 7:
+    if len(xArray) <= maxLabelNum:
         return xArray
     else:
         times = len(xArray)//maxLabelNum

@@ -1,4 +1,5 @@
 import os,json,time
+from plot import makePlot
 
 def loadHistory(sumPath,timePath):
     sumList = []
@@ -19,6 +20,19 @@ def saveData(sumList,sumPath,timeList,timePath):
 def getLocalTime():
     return time.strftime('%m-%d %Hh',time.localtime(time.time()))    
 
+def updateAllPlot():
+    # loda config
+    with open("./config.json","r",errors='ignore',encoding='utf-8') as w:
+        config = json.load(w) 
+    for item in config['monitorList']:
+        name,level,_,_ = item.values()
+        fileName = "%s_%s"%(level,name)
+        sumPath = "./spider/data/sum_%s.json"%(fileName)
+        timePath = "./spider/data/time_%s.json"%(fileName)
+
+        sumList,timeList = loadHistory(sumPath,timePath) 
+        makePlot(timeList,sumList,fileName)
+
 def backup():
     os.system('/bin/cp -f ./spider/data/*.json ./spider/data/backup/')
     # update images for html
@@ -36,5 +50,24 @@ def test():
     with open("./spider/data/sum.json","w",errors='ignore',encoding='utf-8') as w:
         json.dump(testList,w,ensure_ascii=False)
 
+def dataFormat(fileName,oldInterval=12,newInterval=24,testMode=False):
+    sumPath = "./spider/data/sum_%s.json"%(fileName)
+    timePath = "./spider/data/time_%s.json"%(fileName)
+    sumJson, timeJson = loadHistory(sumPath,timePath)
+    if newInterval == 24:
+        # if interval is one day, hide `hour` format
+        timeJson = list(map(lambda x:x.split(" ")[0],timeJson))
+    reduceScale = int(-(newInterval/oldInterval))
+    timeJson = timeJson[::reduceScale][::-1]
+    sumJson = sumJson[::reduceScale][::-1]
+    if testMode:
+        print(timeJson)
+        print(sumJson)
+        return
+    saveData(sumJson,sumPath,timeJson,timePath)
+
+
 if __name__ == '__main__':
     backup()
+    # dataFormat("nation_全国",3,12,False)
+    # updateAllPlot()
