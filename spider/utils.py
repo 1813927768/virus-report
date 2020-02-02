@@ -17,8 +17,8 @@ def saveData(sumList,sumPath,timeList,timePath):
     with open(timePath,"w",errors='ignore') as w:
         json.dump(timeList,w)
 
-def getLocalTime():
-    return time.strftime('%m-%d %Hh',time.localtime(time.time()))    
+def getLocalTime(format="%m-%d %Hh"):
+    return time.strftime(format,time.localtime(time.time()))    
 
 def updateAllPlot():
     # loda config

@@ -28,12 +28,22 @@ def updateConfig(name,level):
             item['lastUpdate'] = getLocalTime()
             break
 
-def checkConfig(name,level):
-    # check if this item in monitorList has been updated
+def checkConfig(name,level,func):
     for item in config['monitorList']:
-        if item['level'] == level and item['name'] == name and item['lastUpdate'] == getLocalTime():
+        if item['level'] == level and item['name'] == name and func(item):
             return True
     return False
+
+def checkConfigInterval(name,level):
+    return checkConfig(name,level,lambda x:x['interval'] == 24)
+
+def checkConfigLastUpdate(name,level):
+    def checkLastUpdate(lastUpdate):
+        if checkConfigInterval(name,level):
+            return lastUpdate == getLocalTime("%m-%d")
+        else:
+            return lastUpdate == getLocalTime()
+    return checkConfig(name,level,lambda x:checkLastUpdate(x['lastUpdate']))
 
 
 def saveConfig():
@@ -50,7 +60,7 @@ def schedulePlot(parser, name="全国",level="nation",interval=3):
     :param interval: set by hour
     """
 
-    if currentTick % interval == 0 and not checkConfig(name,level):
+    if currentTick % interval == 0 and not checkConfigLastUpdate(name,level):
 
         fileName = "%s_%s"%(level,name)
         sumPath = "./spider/data/sum_%s.json"%(fileName)
@@ -67,7 +77,7 @@ def schedulePlot(parser, name="全国",level="nation",interval=3):
             summary = parser.getCitySummary(province,city)
         else:
             raise Exception("scheuler args error")
-        currentTime = getLocalTime()
+        currentTime = getLocalTime("%m-%d") if checkConfigInterval(name,level)  else getLocalTime()
 
         sumList.append(summary)
         timeList.append(currentTime)
