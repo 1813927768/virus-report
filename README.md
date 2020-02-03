@@ -7,6 +7,21 @@ Show the report on a [web page](http://47.100.88.239:8080/).
 ## StartUp
 
 1. Edit the `config.json` file to make your own setting.
+```
+{
+    "startTime": "2020-01-26 12h",
+    "monitorList":
+    [
+        {
+            "name": "全国",
+            "level": "nation",
+            "interval": 12,
+            "lastUpdate": "02-03 12h"
+        }
+        ...
+    ]
+}
+```
 2. `nohup python3 spider/scheduler.py`
 3. `nohup http-server ./web`
 

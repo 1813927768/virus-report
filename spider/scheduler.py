@@ -1,9 +1,9 @@
 from pageDownloader import HtmlDownloader
 from pageParser import HtmlParser, DxyParser
 from txPageParser import TxParser
-from plot import makePlot
-import time, json
+from plot import makePlot,makeGrowthPlot
 from utils import saveData,loadHistory,getLocalTime,backup
+import time, json
 
 currentTick = 0
 config = {}
@@ -50,6 +50,11 @@ def saveConfig():
     config['currentTime'] = getLocalTime()
     with open("./config.json","w",errors='ignore',encoding='utf-8') as w:
         json.dump(config, w, ensure_ascii=False)
+
+def scheduleGrowth():
+    # after all single area plot data is updated, make the growth plot
+    if currentTick % 24 == 0:
+        makeGrowthPlot()
 
 def schedulePlot(parser, name="全国",level="nation",interval=3):
     """schedule a plot of any scope for any area(city or province)
@@ -107,6 +112,7 @@ if __name__=="__main__":
         for item in config['monitorList']:
             name,level,interval,_ = item.values()
             schedulePlot(hp,name,level,interval)
+        scheduleGrowth()
         # update config.json
         saveConfig()
         # update web static contents

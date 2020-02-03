@@ -22,19 +22,30 @@
 
 </style>
 <script>
-    var board = document.getElementById("board");
-    var monitorList = config.monitorList;
-    monitorList.forEach(element => {
-        dom = document.createElement("div")
+    function appendImage(imgSrc,imgDesc) {
+        var dom = document.createElement("div")
         dom.setAttribute("id","panel")
-        img = document.createElement("img")
-        imgSrc = `image/2019-nConv_report_${element.level}_${element.name}_${element.interval !== 24 ? element.lastUpdate : element.lastUpdate.split(" ")[0]}.jpg`
+        var img = document.createElement("img")
+        var imgSrc = imgSrc
         img.setAttribute("src",imgSrc)
-        text = document.createElement("p")
-        text.innerHTML = `${element.name}疫情监控 （每${element.interval}小时更新一次，最后更新于${element.lastUpdate}）`
+        var text = document.createElement("p")
+        text.innerHTML = imgDesc
         dom.appendChild(text)
         dom.appendChild(img)
-        board.appendChild(dom)
+        board.append(dom)
+        var hr = document.createElement("hr")
+        board.append(hr)
+    }
+
+    var board = document.getElementById("board");
+    appendImage(`image/2019-nConv_growth_report.png`,"每日增长趋势图（湖北省内外）")
+
+    var monitorList = config.monitorList;
+    monitorList.forEach(element => {
+        appendImage(
+            `image/2019-nConv_report_${element.level}_${element.name}_${element.interval !== 24 ? element.lastUpdate : element.lastUpdate.split(" ")[0]}.jpg`,
+            `${element.name}疫情监控 （每${element.interval}小时更新一次，最后更新于${element.lastUpdate}）`
+        )
     });
 </script>
 </html>

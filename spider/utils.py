@@ -1,5 +1,4 @@
 import os,json,time
-from plot import makePlot
 
 def loadHistory(sumPath,timePath):
     sumList = []
@@ -19,19 +18,6 @@ def saveData(sumList,sumPath,timeList,timePath):
 
 def getLocalTime(format="%m-%d %Hh"):
     return time.strftime(format,time.localtime(time.time()))    
-
-def updateAllPlot():
-    # loda config
-    with open("./config.json","r",errors='ignore',encoding='utf-8') as w:
-        config = json.load(w) 
-    for item in config['monitorList']:
-        name,level,_,_ = item.values()
-        fileName = "%s_%s"%(level,name)
-        sumPath = "./spider/data/sum_%s.json"%(fileName)
-        timePath = "./spider/data/time_%s.json"%(fileName)
-
-        sumList,timeList = loadHistory(sumPath,timePath) 
-        makePlot(timeList,sumList,fileName)
 
 def backup():
     os.system('/bin/cp -f ./spider/data/*.json ./spider/data/backup/')
@@ -69,5 +55,3 @@ def dataFormat(fileName,oldInterval=12,newInterval=24,testMode=False):
 
 if __name__ == '__main__':
     backup()
-    # dataFormat("nation_全国",3,12,False)
-    # updateAllPlot()
