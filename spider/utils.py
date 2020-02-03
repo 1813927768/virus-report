@@ -23,7 +23,7 @@ def backup():
     os.system('/bin/cp -f ./spider/data/*.json ./spider/data/backup/')
     # update images for html
     os.system('rm -f ./web/image/*')
-    os.system('/bin/cp -f image/*.jpg web/image/')
+    os.system('/bin/cp -f image/* web/image/')
     # update config.js
     with open("./config.json","r",errors='ignore',encoding='utf-8') as w:
         configJson = json.load(w)
