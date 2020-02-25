@@ -49,7 +49,7 @@ def adjustXAxies(xArray):
         times = len(xArray)//maxLabelNum
         return replaceInterval(xArray,times)
 
-def makePlot(x,y,title="national",ignore=['治愈','死亡','疑似']):
+def makePlot(x,y,title="全国",ignore=['治愈','死亡','疑似']):
     if len(x) <= 1:
         return
     plot.ylabel('people')
@@ -59,7 +59,7 @@ def makePlot(x,y,title="national",ignore=['治愈','死亡','疑似']):
             continue
         plot.plot(adjustXAxies(x), list(map(lambda x:x[key],y)), color=colorStyle[key], marker=markerStyle[key], linestyle=lineStyle[key],label=ch2en[key])
     # plot.xticks(range(1,len(x)+1),)
-    plot.title('2019-nConv Report %s'%(title))
+    plot.title('2019-nConv Report')
     # plot.legend(shadow=True,loc="upper left")
     plot.savefig("./image/2019-nConv_report_%s_%s.jpg"%(title,x[-1]))
     plot.close('all')
@@ -116,9 +116,9 @@ def updateAllPlot():
         makePlot(timeList,sumList,fileName)
 
 if __name__ == '__main__':
-    # sumPath = "./spider/data/sum_nation_全国.json"
-    # timePath = "./spider/data/time_nation_全国.json"
-    # sumList,timeList = loadHistory(sumPath,timePath)
-    # makePlot(timeList,sumList)
-    makeGrowthPlot()
+    sumPath = "./spider/data/sum_nation_全国.json"
+    timePath = "./spider/data/time_nation_全国.json"
+    sumList,timeList = loadHistory(sumPath,timePath)
+    makePlot(timeList,sumList)
+    # makeGrowthPlot()
     

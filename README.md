@@ -1,8 +1,8 @@
 This repo is made for real-time tracking of virus 2019-nCoV.
 
-Show the report on a [web page](http://47.100.88.239:8080/).
+Show the report on a web page.
 
-![image](https://github.com/1813927768/virus-report/blob/master/web/image/2019-nConv_report_national_01-28%2013h.jpg)
+![image](./virus_report.png)
 
 ## StartUp
 
